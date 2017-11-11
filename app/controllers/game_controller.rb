@@ -1,7 +1,7 @@
 class GameController < ApplicationController
   def deal
     players = Player.all
-    cards_dealt = players.select(&:has_hand?).map(&:hand)
+    cards_dealt = players.select(&:has_hand?).map(&:hand).flatten
     deck = Deck.new_without(cards: cards_dealt)
 
     players.each do |player|
