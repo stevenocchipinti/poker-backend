@@ -6,7 +6,19 @@ class GameController < ApplicationController
       player.save!
 
       ActionCable.server.broadcast "game_#{player.name}",
-        hand: player.hand.map(&:to_hash)
+        hand: player.hand.map{ |card| card&.to_hash }
+    end
+    head :ok
+  end
+
+  def retract
+    players.each do |player|
+      player.card1 = nil
+      player.card2 = nil
+      player.save!
+
+      ActionCable.server.broadcast "game_#{player.name}",
+        hand: player.hand.map{ |card| card&.to_hash }
     end
     head :ok
   end

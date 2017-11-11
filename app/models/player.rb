@@ -32,6 +32,6 @@ private
   end
 
   def translate_card_object(card)
-    card.to_hash.to_json
+    card && card.to_hash.to_json
   end
 end
