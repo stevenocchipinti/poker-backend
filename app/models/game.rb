@@ -11,6 +11,10 @@ class Game < ApplicationRecord
     card5
   end
 
+  def communal
+    [card1, card2, card3, card4, card5]
+  end
+
   def card1=(card)
     code = translate_card_object(card)
     super(code)

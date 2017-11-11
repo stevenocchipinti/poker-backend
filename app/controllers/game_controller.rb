@@ -18,7 +18,7 @@ class GameController < ApplicationController
     game.save!
 
     ActionCable.server.broadcast "game_all",
-      flop: game.flop.map(&:to_hash)
+      communal: game.communal.map{ |card| card&.to_hash }
     head :ok
   end
 
@@ -27,7 +27,7 @@ class GameController < ApplicationController
     game.save!
 
     ActionCable.server.broadcast "game_all",
-      turn: game.turn.to_hash
+      communal: game.communal.map{ |card| card&.to_hash }
     head :ok
   end
 
@@ -36,7 +36,7 @@ class GameController < ApplicationController
     game.save!
 
     ActionCable.server.broadcast "game_all",
-      river: game.river.to_hash
+      communal: game.communal.map{ |card| card&.to_hash }
     head :ok
   end
 
