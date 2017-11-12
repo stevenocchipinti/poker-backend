@@ -45,7 +45,7 @@ class Game < ApplicationRecord
   end
 
   def clear
-    Player.update_all(card1: nil, card2: nil)
+    Player.all.map(&:fold)
     self.card1 = nil
     self.card2 = nil
     self.card3 = nil

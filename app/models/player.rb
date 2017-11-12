@@ -20,6 +20,12 @@ class Player < ApplicationRecord
     super(code)
   end
 
+  def fold
+    self.card1 = nil
+    self.card2 = nil
+    self.save!
+  end
+
 private
 
   def deserialize_card(code)
