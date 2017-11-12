@@ -1,5 +1,5 @@
 class Game < ApplicationRecord
-  def flop#py
+  def flop
     [card1, card2, card3]
   end
 
