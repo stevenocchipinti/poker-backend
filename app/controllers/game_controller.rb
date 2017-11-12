@@ -4,15 +4,18 @@ class GameController < ApplicationController
       player.card1 = deck.draw
       player.card2 = deck.draw
       player.save!
+      Rails.logger.info("[deal] player: #{player.to_json}")
 
-      ActionCable.server.broadcast "game_#{player.name}",
-        hand: player.hand.map{ |card| card&.to_hash }
+      ActionCable.server.broadcast("game_#{player.name}",
+        hand: player.hand.map{ |card| card&.to_hash },
+      )
     end
     head :ok
   end
 
   def reset
     game.clear
+    Rails.logger.info("[reset] game: #{game.to_json}")
 
     ActionCable.server.broadcast("game_all",
       communal: game.communal.map{ |card| card&.to_hash },
@@ -26,47 +29,53 @@ class GameController < ApplicationController
     game.card2 = deck.draw
     game.card3 = deck.draw
     game.save!
+    Rails.logger.info("[flop] game: #{game.to_json}")
 
-    ActionCable.server.broadcast "game_all",
-      communal: game.communal.map{ |card| card&.to_hash }
+    ActionCable.server.broadcast("game_all",
+      communal: game.communal.map{ |card| card&.to_hash },
+    )
     head :ok
   end
 
   def turn
     game.card4 = deck.draw
     game.save!
+    Rails.logger.info("[turn] game: #{game.to_json}")
 
-    ActionCable.server.broadcast "game_all",
-      communal: game.communal.map{ |card| card&.to_hash }
+    ActionCable.server.broadcast("game_all",
+      communal: game.communal.map{ |card| card&.to_hash },
+    )
     head :ok
   end
 
   def river
     game.card5 = deck.draw
     game.save!
+    Rails.logger.info("[river] game: #{game.to_json}")
 
-    ActionCable.server.broadcast "game_all",
-      communal: game.communal.map{ |card| card&.to_hash }
+    ActionCable.server.broadcast("game_all",
+      communal: game.communal.map{ |card| card&.to_hash },
+    )
     head :ok
   end
 
-  def deck
-    @deck ||= build_deck
-  end
-
   def players
-    @players ||= Player.all
+    Player.all
   end
 
   def game
-    @game ||= Game.first_or_create
+    Game.first_or_create
   end
 
-  def build_deck
-    cards_dealt = players.select(&:has_hand?).map(&:hand)
-    floppy_river_turn = [game.flop, game.turn, game.river]
-
-    Deck.new_without(cards: (cards_dealt + floppy_river_turn).flatten)
+  def deck
+    @deck ||= Deck.new_without(cards: (cards_dealt + communal_dealt).flatten)
   end
 
+  def cards_dealt
+    players.select(&:has_hand?).map(&:hand).flatten
+  end
+
+  def communal_dealt
+    [game.flop, game.turn, game.river].flatten
+  end
 end
