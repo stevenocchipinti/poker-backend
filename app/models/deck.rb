@@ -10,7 +10,7 @@ class Deck
   end
 
   def draw
-    @cards.shuffle.pop
+    @cards.shuffle!.pop
   end
 
 private
