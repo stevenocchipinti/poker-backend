@@ -64,18 +64,14 @@ class GameController < ApplicationController
   end
 
   def game
-    Game.first_or_create
+    @game ||= Game.first_or_create
   end
 
   def deck
-    @deck ||= Deck.new_without(cards: (cards_dealt + communal_dealt).flatten)
+    @deck ||= Deck.new_without(cards: (cards_dealt + game.communal).flatten)
   end
 
   def cards_dealt
     players.select(&:has_hand?).map(&:hand).flatten
-  end
-
-  def communal_dealt
-    [game.flop, game.turn, game.river].flatten
   end
 end

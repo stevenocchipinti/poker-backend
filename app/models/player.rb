@@ -4,34 +4,29 @@ class Player < ApplicationRecord
   end
 
   def hand
-    [card1, card2]
+    [
+      deserialize_card(card1),
+      deserialize_card(card2),
+    ]
   end
 
   def card1=(card)
-    code = translate_card_object(card)
+    code = serialize_card(card)
     super(code)
   end
 
   def card2=(card)
-    code = translate_card_object(card)
+    code = serialize_card(card)
     super(code)
-  end
-
-  def card1
-    translate_card_code(super)
-  end
-
-  def card2
-    translate_card_code(super)
   end
 
 private
 
-  def translate_card_code(code)
+  def deserialize_card(code)
     Card.new(JSON.parse(code).transform_keys(&:to_sym)) if code.present?
   end
 
-  def translate_card_object(card)
+  def serialize_card(card)
     card.to_hash.to_json if card.present?
   end
 end

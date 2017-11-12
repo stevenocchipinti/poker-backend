@@ -1,82 +1,66 @@
 class Game < ApplicationRecord
   def flop
-    [card1, card2, card3]
+    [
+      deserialize_card(card1),
+      deserialize_card(card2),
+      deserialize_card(card3),
+    ]
   end
 
   def turn
-    card4
+    deserialize_card(card4)
   end
 
   def river
-    card5
+    deserialize_card(card5)
   end
 
   def communal
-    [card1, card2, card3, card4, card5]
+    [flop, turn, river].flatten
   end
 
   def card1=(card)
-    code = translate_card_object(card)
+    code = serialize_card(card)
     super(code)
   end
 
   def card2=(card)
-    code = translate_card_object(card)
+    code = serialize_card(card)
     super(code)
   end
 
   def card3=(card)
-    code = translate_card_object(card)
+    code = serialize_card(card)
     super(code)
   end
 
   def card4=(card)
-    code = translate_card_object(card)
+    code = serialize_card(card)
     super(code)
   end
 
   def card5=(card)
-    code = translate_card_object(card)
+    code = serialize_card(card)
     super(code)
-  end
-
-  def card1
-    translate_card_code(super)
-  end
-
-  def card2
-    translate_card_code(super)
-  end
-
-  def card3
-    translate_card_code(super)
-  end
-
-  def card4
-    translate_card_code(super)
-  end
-
-  def card5
-    translate_card_code(super)
   end
 
   def clear
     Player.update_all(card1: nil, card2: nil)
-    card1 = nil
-    card2 = nil
-    card3 = nil
-    card4 = nil
-    card5 = nil
+    self.card1 = nil
+    self.card2 = nil
+    self.card3 = nil
+    self.card4 = nil
+    self.card5 = nil
     save!
   end
 
 private
 
-  def translate_card_code(code)
+  def deserialize_card(code)
     Card.new(JSON.parse(code).transform_keys(&:to_sym)) if code.present?
   end
 
-  def translate_card_object(card)
+  def serialize_card(card)
     card.to_hash.to_json if card.present?
   end
 end
