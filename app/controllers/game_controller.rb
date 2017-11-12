@@ -11,15 +11,13 @@ class GameController < ApplicationController
     head :ok
   end
 
-  def retract
-    players.each do |player|
-      player.card1 = nil
-      player.card2 = nil
-      player.save!
+  def reset
+    game.clear
 
-      ActionCable.server.broadcast "game_#{player.name}",
-        hand: player.hand.map{ |card| card&.to_hash }
-    end
+    ActionCable.server.broadcast("game_all",
+      communal: game.communal.map{ |card| card&.to_hash },
+      hand: [],
+    )
     head :ok
   end
 

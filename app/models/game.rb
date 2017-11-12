@@ -60,6 +60,16 @@ class Game < ApplicationRecord
     translate_card_code(super)
   end
 
+  def clear
+    Player.update_all(card1: nil, card2: nil)
+    card1 = nil
+    card2 = nil
+    card3 = nil
+    card4 = nil
+    card5 = nil
+    save!
+  end
+
 private
 
   def translate_card_code(code)
