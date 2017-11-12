@@ -12,14 +12,6 @@
 
 ActiveRecord::Schema.define(version: 20171111124339) do
 
-  create_table "create_players", force: :cascade do |t|
-    t.string "name"
-    t.string "card1"
-    t.string "card2"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "games", force: :cascade do |t|
     t.string "card1"
     t.string "card2"
@@ -34,6 +26,8 @@ ActiveRecord::Schema.define(version: 20171111124339) do
     t.string "name"
     t.string "card1"
     t.string "card2"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
