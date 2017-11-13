@@ -27,7 +27,10 @@ class GameController < ApplicationController
   def end_game
     game.destroy
 
-    ActionCable.server.broadcast("game_all", communal: [], hand: [])
+    ActionCable.server.broadcast("game_all",
+      communal: 5.times.map{ nil },
+      hand: []
+    )
     head :ok
   end
 
