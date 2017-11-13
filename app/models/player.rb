@@ -1,4 +1,6 @@
 class Player < ApplicationRecord
+  belongs_to :game
+
   def has_hand?
     card1.present?
   end

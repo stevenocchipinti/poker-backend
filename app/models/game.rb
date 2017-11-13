@@ -1,4 +1,6 @@
 class Game < ApplicationRecord
+  has_many :players, dependent: :destroy
+
   def flop
     [
       deserialize_card(card1),
@@ -44,8 +46,8 @@ class Game < ApplicationRecord
     super(code)
   end
 
-  def clear
-    Player.all.map(&:fold)
+  def end_round
+    players.map(&:fold)
     self.card1 = nil
     self.card2 = nil
     self.card3 = nil

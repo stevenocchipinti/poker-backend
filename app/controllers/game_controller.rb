@@ -13,14 +13,21 @@ class GameController < ApplicationController
     head :ok
   end
 
-  def reset
-    game.clear
-    Rails.logger.info("[reset] game: #{game.to_json}")
+  def end_round
+    game.end_round
+    Rails.logger.info("[end_round] game: #{game.to_json}")
 
     ActionCable.server.broadcast("game_all",
       communal: game.communal.map{ |card| card&.to_hash },
       hand: [],
     )
+    head :ok
+  end
+
+  def end_game
+    game.destroy
+
+    ActionCable.server.broadcast("game_all", communal: [], hand: [])
     head :ok
   end
 
